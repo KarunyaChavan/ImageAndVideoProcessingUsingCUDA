@@ -20,24 +20,39 @@ int main(int argc, char** argv)
         printf("usage: main <Image_Path> <Func_name> <Func_Params...>\n");
         return 1;
     }
+<<<<<<< HEAD
 
     string func_name = argv[2];
 
     if (func_name == "conv" && argc < 4)
+=======
+    string func_name = argv[2];
+    if (func_name == "conv" and argc < 4)
+>>>>>>> upstream/master
     {
         printf("usage: main <Image_Path> conv <Conv_size>\n");
         return 1;
     }
+<<<<<<< HEAD
     if (func_name == "knn" && argc < 5)
     {
         printf("usage: main <Image_Path> knn <Conv_size> <Weight_Decay_Param>\n");
         return 1;
     }
     if (func_name == "nlm" && argc < 6)
+=======
+    if (func_name == "knn" and argc < 5)
+    {
+        printf("usage: main <Image_Path> <Func_name> <Conv_size> <Weight_Decay_Param>\n");
+        return 1;
+    }
+    if (func_name == "nlm" and argc < 6)
+>>>>>>> upstream/master
     {
         printf("usage: main <Image_Path> nlm <Conv_size> <Block_radius> <Weight_Decay_Param>\n");
         return 1;
     }
+<<<<<<< HEAD
 
     // ---- Load image ----
     Mat image;
@@ -55,6 +70,21 @@ int main(int argc, char** argv)
     // ---- Process ----
     Mat res;
 
+=======
+    Mat image;
+    image;
+    if (func_name == "edge_detect")
+        image = imread(argv[1], 0);
+    else
+        image = imread(argv[1], CV_LOAD_IMAGE_UNCHANGED);
+    if (!image.data)
+    {
+        cout << "Could not open or find the image" << std::endl;
+        return 1;
+    }
+    Mat res;
+    
+>>>>>>> upstream/master
     if (func_name == "nlm")
         res = non_local_means_cpu(image, stoi(argv[3]), stoi(argv[4]), stod(argv[5]));
     else if (func_name == "knn")
@@ -66,6 +96,7 @@ int main(int argc, char** argv)
         res = knn_grey(image, 2, 150.0);
         res = conv_with_mask(res, 1);
     }
+<<<<<<< HEAD
     else
     {
         cerr << "Unknown function name: " << func_name << endl;
@@ -80,5 +111,11 @@ int main(int argc, char** argv)
     imwrite("output.jpg", res);
     cout << "Output saved as output.jpg" << endl;
 
+=======
+    namedWindow("Display Window", CV_WINDOW_AUTOSIZE);
+    imshow("Display Window", res);
+    waitKey(0);
+    imwrite("output.jpg", res);
+>>>>>>> upstream/master
     return 0;
 }

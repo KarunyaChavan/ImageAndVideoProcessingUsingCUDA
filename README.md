@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Image and Video Processing with CUDA C++
+=======
+# Image Processing with CUDA C++
+>>>>>>> upstream/master
 
 ## Objective
 The objective of this project is to implement from scratch in CUDA C++ various image processing algorithms.

@@ -203,6 +203,10 @@ void kernel_nlm_host(Rgb* device_img, Rgb* img, int width, int height, int conv_
 }
 
 // Implementation of the Canny Edge detection algorithm
+<<<<<<< HEAD
+=======
+void kernel_nlm_host(Rgb* device_img, Rgb* img, int width, int height, int conv_size, int block_radius, double h_param)
+>>>>>>> upstream/master
 void kernel_edge_detect(Rgb* device_img, double* img, int width, int height, int conv_size, double otsu_threshold)
 {
     // Creation of the gpu unit grid
@@ -211,6 +215,7 @@ void kernel_edge_detect(Rgb* device_img, double* img, int width, int height, int
     int by = (height + blockSize.y - 1) / blockSize.y;
     dim3 gridSize = dim3(bx, by);
 
+<<<<<<< HEAD
     // 1) Sobel gradients + directions
     sobel_conv<<<gridSize, blockSize>>>(device_img, img, width, height, conv_size);
     cudaDeviceSynchronize();
@@ -231,3 +236,30 @@ void kernel_edge_detect(Rgb* device_img, double* img, int width, int height, int
 
     cudaFree(changed_device);
 }
+=======
+    // Preprocessing
+    // Apply a convolution on the image using the Sobel kernel
+    sobel_conv<<<gridSize, blockSize>>>(device_img, img, width, height, conv_size);
+    cudaDeviceSynchronize();
+
+    non_max_suppr<<<gridSize, blockSize>>>(device_img, img, width, height, otsu_threshold);
+    cudaDeviceSynchronize();
+
+    // Run the hysterysis algorithm, stops when the image is unchanged
+    int *changed_device;
+    int *changed_host;
+    cudaMallocManaged(&changed_device, 1 * sizeof (int));
+    hysterysis<<<gridSize, blockSize>>>(device_img, changed_device, width, height, otsu_threshold * 0.5);
+    cudaDeviceSynchronize();
+    cudaMemcpy(changed_host, changed_device, sizeof (int), cudaMemcpyDeviceToHost);
+
+    while (changed_host)
+    {
+        hysterysis<<<gridSize, blockSize>>>(device_img, changed_device, width, height, otsu_threshold * 0.5);
+        cudaDeviceSynchronize();
+        cudaMemcpy(changed_host, changed_device, sizeof (int), cudaMemcpyDeviceToHost);
+    }
+}
+
+
+>>>>>>> upstream/master
